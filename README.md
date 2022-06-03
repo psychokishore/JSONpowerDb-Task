@@ -15,8 +15,8 @@ It can be used as Database where u can create relations, enter data ,remove data
 
 
 Examples of use:
-the following files contain example of given applications."\n"
-Jsondbput.js- to create a single request.
-Jsondbputall.js - to create multiple records.
-JsondbUPDATE.js- update a record
-JsondbRemove.js- remove a record.
+the following files contain example of given applications.<br/>
+Jsondbput.js- to create a single request.<br/>
+Jsondbputall.js - to create multiple records.<br/>
+JsondbUPDATE.js- update a record<br/>
+JsondbRemove.js- remove a record.<br/>
