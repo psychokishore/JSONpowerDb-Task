@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html lang="en">
+<head>
+<title>Bootstrap Example</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script
+src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script
+src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container">
+<h2>Vertical (basic) form</h2>
+<form id="empForm" method="post">
+<div class="form-group">
+<div class="form-group">
+<label for="recNo">Record No:</label>
+<input type="text" class="form-control" id="recNo"
+placeholder="Enter Record No" name="recNo">
+</div>
+<span><label for="empId">Employee ID:</label> <label id="empIdMsg">
+</label></span>
+<input type="text" class="form-control" name="empId" id="empId"
+placeholder="Enter Employee ID" required>
+</div>
+<div class="form-group">
+<label for="empName">Employee Name:</label>
+<input type="text" class="form-control" id="empName"
+placeholder="Enter Employee Name" name="empName">
+</div>
+<div class="form-group">
+<label for="empEmail">Email:</label>
+<input type="email" class="form-control" id="empEmail"
+placeholder="Enter Employee Email" name="empEmail">
+</div>
+<input type="button" class="btn btn-primary" id="empSave" value="Save"
+onclick="saveEmployee();">
+</form>
+</div>
+<script>
+$("#RecNo").focus();
+function validateAndGetFormData() {
+var recNoVar = $("#recNo").val();
+if (recNoVar === "") {
+alert("Record No is Required Value");
+$("#recNo").focus();
+return "";
+}
+var empIdVar = $("#empId").val();
+var empNameVar = $("#empName").val();
+var empEmailVar = $("#empEmail").val();
+if (empEmailVar === "" && empIdVar ==="" && empNameVar ==="") {
+alert("No changes to make");
+$("#empId").focus();
+return "";
+}
+if (empEmailVar != "" && empIdVar !="" && empNameVar !="") {
+var jsonStrObj = { [recNoVar] : {
+empId: empIdVar,
+empName: empNameVar,
+empEmail: empEmailVar,
+}}}
+else if (empEmailVar != "" && empIdVar !="") {
+var jsonStrObj = { [recNoVar] : {
+empId: empIdVar,
+empEmail: empEmailVar,
+}}
+}
+else  if ( empIdVar !="" && empNameVar !="") {
+var jsonStrObj = { [recNoVar] : {
+empId: empIdVar,
+empName: empNameVar,
+}}
+}
+else if(empEmailVar != "" && empNameVar !="") {
+var jsonStrObj = { [recNoVar] : {
+empName: empNameVar,
+empEmail: empEmailVar,
+}}
+}
+else if(empIdVar !=""){
+var jsonStrObj = { [recNoVar] : {
+empId: empIdVar,
+}}}
+else if(empNameVar !=""){var jsonStrObj = { [recNoVar] : {
+empName: empNameVar,
+}}}
+else if(empEmailVar != ""){var jsonStrObj = { [recNoVar] : {
+empEmail: empEmailVar,
+}}}
+return JSON.stringify(jsonStrObj);
+}
+// This method is used to create Update Json request.
+function createUPDATERequest(connToken, jsonObj, dbName, relName) {
+var updateRequest = "{\n"
++ "\"token\" : \""
++ connToken
++ "\","
++ "\"dbName\": \""
++ dbName
++ "\",\n" + "\"cmd\" : \"UPDATE\",\n"
++ "\"rel\" : \""
++ relName + "\","
++ "\"jsonStr\": \n"
++ jsonObj
++ "\n"
++ "}";
+return updateRequest;
+}
+function executeCommand(reqString, dbBaseUrl, apiEndPointUrl) {
+var url = dbBaseUrl + apiEndPointUrl;
+var jsonObj;
+$.post(url, reqString, function (result) {
+jsonObj = JSON.parse(result);
+}).fail(function (result) {
+var dataJsonObj = result.responseText;
+jsonObj = JSON.parse(dataJsonObj);
+});
+return jsonObj;
+}
+function resetForm() {
+$("#recNo").val("")
+$("#empId").val("")
+$("#empName").val("");
+$("#empEmail").val("");
+$("#recNo").focus();
+}
+function saveEmployee() {
+var jsonStr = validateAndGetFormData();
+if (jsonStr === "") {
+return;
+}
+var updateReqStr = createUPDATERequest("90938970|-31949289173918770|90940710",
+jsonStr, "SAMPLE", "EMP-REL");
+alert(updateReqStr);
+jQuery.ajaxSetup({async: false});
+var resultObj = executeCommand(updateReqStr,
+"http://api.login2explore.com:5577", "/api/iml");
+alert(JSON.stringify(resultObj));
+jQuery.ajaxSetup({async: true});
+resetForm();
+}
+</script>
+</body>
+</html>
+
